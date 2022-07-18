@@ -16,6 +16,22 @@ public class Mano extends Mazo {
 		return suma;
 	}
 	
+	public int valorManoVisibles() {
+		int suma=0;
+		for (Carta carta : cartas) {
+			if (carta.isVisible()) {
+				suma=suma+carta.getValor();
+			}
+		}
+		return suma;
+	}
+	
+	public void descubrir() {
+		for (Carta carta : cartas) {
+			carta.setVisible(true);
+		}
+	}
+	
 	public boolean finDeJuego() {
 		if (valorMano()>=21) {
 			return true;
@@ -26,12 +42,19 @@ public class Mano extends Mazo {
 
 	@Override
 	public String toString() {
-		return "Valor de la mano:" + valorMano() + "\n"+ super.toString();
+		return "Valor de la mano:" + valorManoVisibles() + "\n"+ super.toString();
 	}
 	
 	public void pedirCarta(Mazo m) {
 		if (!finDeJuego()) {
 			Carta c = m.solicitarCarta();
+			this.cartas.add(c);
+		}
+	}
+	public void pedirCarta(Mazo m, boolean visible) {
+		if (!finDeJuego()) {
+			Carta c = m.solicitarCarta();
+			c.setVisible(visible);
 			this.cartas.add(c);
 		}
 	}

@@ -8,6 +8,7 @@ public class Carta {
 	
 	private Palo palo;
 	private int num;
+	private boolean visible;
 	
 	
 	public Carta(Palo palo, int num) {
@@ -15,8 +16,17 @@ public class Carta {
 		if (num>=1 && num <=13) {
 			this.num = num;
 		}
+		this.visible=true;
 	}
 
+	public Carta(Palo palo, int num, boolean visible) {
+		this.palo = palo;
+		if (num>=1 && num <=13) {
+			this.num = num;
+		}
+		this.visible=visible;
+	}
+	
 	public Palo getPalo() {
 		return palo;
 	}
@@ -25,6 +35,14 @@ public class Carta {
 		return num;
 	}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	public int getValor() {
 		if (this.num==1) {
 			return 11;
@@ -51,6 +69,10 @@ public class Carta {
 
 	@Override
 	public String toString() {
-		return "[ " +this.mostrarNumero() + " - "+ this.palo + "]";
+		if (this.visible) {
+			return "[ " +this.mostrarNumero() + " - "+ this.palo + "]";
+		} else {
+			return "[ Carta no visible ]";
+		}
 	}
 }
