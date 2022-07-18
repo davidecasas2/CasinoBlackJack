@@ -51,6 +51,6 @@ public class Carta {
 
 	@Override
 	public String toString() {
-		return "[ " +this.num + " - "+ this.palo + "]";
+		return "[ " +this.mostrarNumero() + " - "+ this.palo + "]";
 	}
 }
