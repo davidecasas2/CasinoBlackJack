@@ -2,6 +2,9 @@ package modelo;
 
 import java.util.ArrayList;
 
+import excepciones.SeHaPasadoException;
+import excepciones.TieneBlackJackException;
+
 public class Mano extends Mazo {
 
 	public Mano() {
@@ -45,10 +48,23 @@ public class Mano extends Mazo {
 		return "Valor de la mano:" + valorManoVisibles() + "\n"+ super.toString();
 	}
 	
-	public void pedirCarta(Mazo m) {
-		if (!finDeJuego()) {
-			Carta c = m.solicitarCarta();
-			this.cartas.add(c);
+	public void pedirCarta(Mazo m) 
+			throws SeHaPasadoException, TieneBlackJackException {
+		if (valorMano()>21) {
+			throw new SeHaPasadoException("se ha pasado");
+		}
+		if (valorMano()==21) {
+			throw new TieneBlackJackException();
+		}
+		
+		Carta c = m.solicitarCarta();
+		this.cartas.add(c);
+		
+		if (valorMano()>21) {
+			throw new SeHaPasadoException("se ha pasado");
+		}
+		if (valorMano()==21) {
+			throw new TieneBlackJackException();
 		}
 	}
 	public void pedirCarta(Mazo m, boolean visible) {

@@ -2,6 +2,8 @@ package ppal;
 
 import java.util.Scanner;
 
+import excepciones.SeHaPasadoException;
+import excepciones.TieneBlackJackException;
 import modelo.Mano;
 import modelo.Mazo;
 
@@ -16,55 +18,73 @@ public class Juego {
 		System.out.println("Baranjando carta...");
 		mazo.barajar();
 		
-		System.out.println("Repartiendo cartas inciales...");
-		jugador.pedirCarta(mazo);
-		System.out.println("Jugador: "+jugador);
+		try {
+			System.out.println("Repartiendo cartas inciales...");
+			jugador.pedirCarta(mazo);
+			System.out.println("Jugador: "+jugador);
+			
+			banca.pedirCarta(mazo);
+			System.out.println("Banca: "+banca);
+			
+			jugador.pedirCarta(mazo);
+			System.out.println("Jugador: "+jugador);
+			
+			banca.pedirCarta(mazo,false);
+			System.out.println("Banca: "+banca);
+		} catch (SeHaPasadoException | TieneBlackJackException e) {
+		}
 		
-		banca.pedirCarta(mazo);
-		System.out.println("Banca: "+banca);
-		
-		jugador.pedirCarta(mazo);
-		System.out.println("Jugador: "+jugador);
-		
-		banca.pedirCarta(mazo,false);
-		System.out.println("Banca: "+banca);
 		
 		
 		Scanner entrada = new Scanner(System.in);
-		int opcion;
-		do {
-			System.out.println("¿Quieres carta ) (1-Si, 0-NO)");
-			opcion  = entrada.nextInt();
-			if (opcion ==1) {
-				jugador.pedirCarta(mazo);
-				System.out.println("Tienes en tu mano \n"+jugador);
+		int opcion=1;
+		try {
+			while (opcion!=0 && !jugador.finDeJuego()) {
+				System.out.println("¿Quieres carta ) (1-Si, 0-NO)");
+				opcion  = entrada.nextInt();
+				if (opcion!=0) {
+					jugador.pedirCarta(mazo);
+					System.out.println("Tienes en tu mano \n"+jugador);
+				}
 			} 
-		} while (opcion!=0 && !jugador.finDeJuego());
-		
-		
-		System.out.println("Juega la banca....");
-		banca.descubrir();
-		System.out.println("cartas de la banca: "+banca);
-		
-		if (jugador.valorMano()>21){
-			System.out.println("Gana la banca");
-		} else {
-			do {
-				System.out.println("Pidiendo carta");
-				banca.pedirCarta(mazo);
-				System.out.println(banca);
-			} while (banca.valorMano()<=16);
 			
-			if (jugador.valorMano()>banca.valorMano() || banca.valorMano()>21) {
-				System.out.println("Enhorabuena has ganado: "+jugador);
-			} else if (jugador.valorMano()==banca.valorMano()){
-				System.out.println("Empate");
-				System.out.println("Jugador: "+jugador);
-				System.out.println("Banca: " + banca);
-			}else {
-				System.out.println("Gana la banca: "+banca);
+			System.out.println("Juega la banca....");
+			banca.descubrir();
+			System.out.println("cartas de la banca: "+banca);
+			try {
+				do {
+					System.out.println("Pidiendo carta");
+					banca.pedirCarta(mazo);
+					System.out.println(banca);
+				} while (banca.valorMano()<=16);
+				
+				if (jugador.valorMano()>banca.valorMano()) {
+					System.out.println("Jugador gana");
+				} else if (jugador.valorMano()==banca.valorMano()) {
+					System.out.println("empate");
+				} else {
+					System.out.println("GAna la banca");
+				}
+				
+			} catch(SeHaPasadoException e) {
+				System.out.println("La banca se ha pasado "+banca);
+				System.out.println("Gana el jugador");
+			} catch (TieneBlackJackException e) {
+				System.out.println("La banca gana, tiene blackjack"+banca);
 			}
+			
+			
+		}catch(SeHaPasadoException e) {
+			System.out.println("TE has pasado "+jugador);
+			System.out.println("Gana la banca");
+			banca.descubrir();
+			System.out.println(banca);
+		} catch (TieneBlackJackException e) {
+			System.out.println("Tienes BlackJack. Tu ganas "+jugador);
 		}
+		
+		
+		
 		
 		
 		
